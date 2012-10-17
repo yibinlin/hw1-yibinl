@@ -1,44 +1,41 @@
 package edu.cmu.lti.se.ner;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.tutorial.RoomNumber;
+
+import edu.cmu.lti.se.NERAnnotation;
 
 public class GeneMentionAnnotator extends JCasAnnotator_ImplBase {
-	  private Pattern mYorktownPattern = Pattern.compile("\\b[0-4]\\d-[0-2]\\d\\d\\b");
 
-	  private Pattern mHawthornePattern = Pattern.compile("\\b[G1-4][NS]-[A-Z]\\d\\d\\b");
+	PosTagNamedEntityRecognizer sNER = new PosTagNamedEntityRecognizer();
 
-	  /**
-	   * @see JCasAnnotator_ImplBase#process(JCas)
-	   */
-	  public void process(JCas aJCas) {
-	    // get document text
-	    String docText = aJCas.getDocumentText();
-	    // search for Yorktown room numbers
-	    Matcher matcher = mYorktownPattern.matcher(docText);
-	    while (matcher.find()) {
-	      // found one - create annotation
-	      RoomNumber annotation = new RoomNumber(aJCas);
-	      annotation.setBegin(matcher.start());
-	      annotation.setEnd(matcher.end());
-	      annotation.setBuilding("Yorktown");
-	      annotation.addToIndexes();
-	    }
-	    // search for Hawthorne room numbers
-	    matcher = mHawthornePattern.matcher(docText);
-	    while (matcher.find()) {
-	      // found one - create annotation
-	      RoomNumber annotation = new RoomNumber(aJCas);
-	      annotation.setBegin(matcher.start());
-	      annotation.setEnd(matcher.end());
-	      annotation.setBuilding("Hawthorne");
-	      annotation.addToIndexes();
-	    }
-	  }
-
+	/**
+	 * @see JCasAnnotator_ImplBase#process(JCas)
+	 */
+	public void process(JCas aJCas) {
+		// get document text
+		String docText = aJCas.getDocumentText();
+		String[] parts = docText.split(" ", 2);
+		
+		Map<Integer, Integer> begin2End = sNER.getGeneSpans(docText);
+		Iterator it = begin2End.entrySet().iterator();
+		while(it.hasNext())
+		{
+			Map.Entry<Integer, Integer> pairs = (Map.Entry<Integer, Integer>)it.next();
+			NERAnnotation annotation = new NERAnnotation(aJCas);
+			annotation.setBegin(pairs.getKey());
+			annotation.setEnd(pairs.getValue());
+			annotation.setOutputId(parts[0]);
+			annotation.setGeneName(docText.substring(pairs.getKey(), pairs.getValue()));
+			annotation.addToIndexes();
+			
+	        //System.out.println(pairs.getKey() + " , " + pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+		}
+		
 	}
 
+}

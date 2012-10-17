@@ -1,3 +1,4 @@
+package edu.cmu.lti.se.ner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,14 @@ public class PosTagNamedEntityRecognizer {
 
   private StanfordCoreNLP pipeline;
 
-  public PosTagNamedEntityRecognizer() throws ResourceInitializationException {
+  public PosTagNamedEntityRecognizer(){
+	try {
     Properties props = new Properties();
     props.put("annotators", "tokenize, ssplit, pos");
-    pipeline = new StanfordCoreNLP(props);
+    pipeline = new StanfordCoreNLP(props);}
+	catch (Exception ex){
+		ex.printStackTrace();
+	}
   }
 
   public Map<Integer, Integer> getGeneSpans(String text) {

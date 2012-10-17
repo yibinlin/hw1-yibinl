@@ -1,3 +1,6 @@
 *.class
 NERAnnotation.java
 NERAnnotation_Type.java
+*.in
+*.out
+/target/*
