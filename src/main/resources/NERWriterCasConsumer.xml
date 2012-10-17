@@ -15,12 +15,24 @@
         <multiValued>false</multiValued>
         <mandatory>true</mandatory>
       </configurationParameter>
+      <configurationParameter>
+        <name>GoldStandard</name>
+        <type>String</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
         <name>OutputFile</name>
         <value>
           <string>/usr0/home/yibinl/workspace/hw1-yibinl/src/main/resources/data/input/hw1.out</string>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>GoldStandard</name>
+        <value>
+          <string>/usr0/home/yibinl/workspace/hw1-yibinl/src/main/resources/data/sample.out</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>

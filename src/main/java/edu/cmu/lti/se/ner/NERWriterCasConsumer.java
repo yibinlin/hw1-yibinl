@@ -1,10 +1,13 @@
 package edu.cmu.lti.se.ner;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
@@ -15,8 +18,6 @@ import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceProcessException;
 import org.xml.sax.SAXException;
-
-import edu.cmu.lti.se.ner.NERAnnotation;
 
 /**
  * A simple CAS consumer that generates XCAS (XML representation of the CAS)
@@ -36,18 +37,33 @@ public class NERWriterCasConsumer extends CasConsumer_ImplBase {
 	 * directory into which the output files will be written.
 	 */
 	public static final String PARAM_OUTPUTFILE = "OutputFile";
+	
+	public static final String PARAM_GOLDSTANDARD = "GoldStandard";
 
 	private File mOutputFile;
+	
+	private File mGoldStandard;
 
 	private int mDocNum;
+	BufferedWriter out;
 
 	public void initialize() throws ResourceInitializationException {
 		mDocNum = 0;
 		mOutputFile = new File(
 				(String) getConfigParameterValue(PARAM_OUTPUTFILE));
+		mGoldStandard = new File(
+				(String) getConfigParameterValue(PARAM_GOLDSTANDARD));
 		/*
 		 * if (!mOutputFile.exists()) { mOutputDir.mkdirs(); }
 		 */
+		FileWriter fw;
+		try {
+			fw = new FileWriter(mOutputFile);
+			out = new BufferedWriter(fw);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -74,6 +90,7 @@ public class NERWriterCasConsumer extends CasConsumer_ImplBase {
 
 		// retreive the filename of the input file from the CAS
 		File outFile = mOutputFile;
+		
 
 		// serialize XCAS and write to output file
 		try {
@@ -97,8 +114,7 @@ public class NERWriterCasConsumer extends CasConsumer_ImplBase {
 	 *             if an error occurs generating the XML text
 	 */
 	private void writeToFile(JCas jcas, File name) throws IOException {
-		FileWriter fw = new FileWriter(name);
-		BufferedWriter out = new BufferedWriter(fw);
+		
 		FSIterator<Annotation> it = jcas.getAnnotationIndex().iterator();
 		StringBuffer sb = new StringBuffer();
 
@@ -120,13 +136,100 @@ public class NERWriterCasConsumer extends CasConsumer_ImplBase {
 		}
 
 		try {
+			//System.out.println(sb.toString());
 			out.write(sb.toString());
-
 		} finally {
-			if (out != null) {
-				out.close();
-			}
+			;
 		}
 	}
+	
+	/**
+	 * evaluate output file against gold standard provided in this hw.
+	 * 
+	 * @param goldStandard the sample.out file
+	 * @param output the output file of the annotator
+	 */
+	private void evaluate(File goldStandard, File output)
+	{
+		if(goldStandard == null)
+			return;
+		
+		int ptG = 0;
+		int ptO = 0;
+		ArrayList<String> linesG = new ArrayList<String>();
+		ArrayList<String> linesO = new ArrayList<String>();
+		ArrayList<String> correct = new ArrayList<String>();
+		String thisLine;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(goldStandard));
+			while ((thisLine = br.readLine()) != null) {
+				thisLine = thisLine.trim();
+				thisLine = thisLine.replaceAll("\\r?\\n", "");
+				String[] parts = thisLine.split("\\|");
+				thisLine = parts[0] + " " + parts[1];
+				linesG.add(thisLine);											
+			}
+			br.close();
+			br = new BufferedReader(new FileReader(output));
+			while ((thisLine = br.readLine()) != null) {
+				thisLine = thisLine.trim();
+				thisLine = thisLine.replaceAll("\\r?\\n", "");
+				String[] parts = thisLine.split("\\|");
+				thisLine = parts[0] + " " + parts[1];
+				//System.out.println(thisLine);
+				linesO.add(thisLine);											
+			}
+			br.close();
+			
+			for(int i = 0; i < linesO.size(); i++)
+			{
+				ptO = i;
+				for(int j = ptG; j < linesG.size(); j++)
+				{
+					if(linesG.get(j).equals(linesO.get(i)))
+					{
+						ptG = j + 1;
+						correct.add(linesO.get(i));
+						break;
+					}
+				}
+			}
+			
+			double precision = ((double)(correct.size()))/linesO.size();
+			double recall = ((double)(correct.size()))/linesG.size();
+			double f1 = 2.0 * (precision * recall) / (precision + recall);
+			StringBuffer res = new StringBuffer();
+			res.append(String.format("Number of gene names in the output: %d.\n", linesO.size()));
+			res.append(String.format("Number of gene names in the gold standard: %d.\n", linesG.size()));
+			res.append(String.format("Number of gene names correctly labeled: %d.\n", correct.size()));
+			res.append(String.format("Precision: %f.\n", precision));
+			res.append(String.format("Recall: %f.\n", recall));
+			res.append(String.format("F1 score: %f.\n", f1));
+			System.out.println(res.toString());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+	
+	/**
+	 * @override prints the report of the current run. 
+	 * The report reports some common statistics, including F1 measure.
+	 * 
+	 */
+	public void destroy()
+	{
+		try {
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		evaluate(this.mGoldStandard, this.mOutputFile);
+	}
+	
+	
 
 }

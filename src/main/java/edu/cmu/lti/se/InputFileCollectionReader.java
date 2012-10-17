@@ -40,14 +40,12 @@ import org.apache.uima.util.Progress;
 import org.apache.uima.util.ProgressImpl;
 
 /**
- * A simple collection reader that reads documents from a directory in the
+ * A simple collection reader that reads a file in the
  * filesystem. It can be configured with the following parameters:
  * <ul>
- * <li><code>InputDirectory</code> - path to directory containing files</li>
- * <li><code>Encoding</code> (optional) - character encoding of the input files</li>
+ * <li><code>InputFile</code> - path to the input file (set to hw1.in)</li>
  * <li><code>Language</code> (optional) - language of the input documents</li>
  * </ul>
- * 
  * 
  */
 public class InputFileCollectionReader extends CollectionReader_ImplBase {
@@ -116,6 +114,8 @@ public class InputFileCollectionReader extends CollectionReader_ImplBase {
 	}
 
 	/**
+	 * Get the next line as a CAS object in the input file.
+	 * 
 	 * @see org.apache.uima.collection.CollectionReader#getNext(org.apache.uima.cas.CAS)
 	 */
 	public void getNext(CAS aCAS) throws IOException, CollectionException {
@@ -164,6 +164,8 @@ public class InputFileCollectionReader extends CollectionReader_ImplBase {
 	}
 
 	/**
+	 * shows how many lines have been generated compared to the total number of lines in the input file.
+	 * 
 	 * @see org.apache.uima.collection.base_cpm.BaseCollectionReader#getProgress()
 	 */
 	public Progress[] getProgress() {
@@ -171,15 +173,5 @@ public class InputFileCollectionReader extends CollectionReader_ImplBase {
 				Progress.ENTITIES) };
 	}
 
-	/**
-	 * Gets the total number of documents that will be returned by this
-	 * collection reader. This is not part of the general collection reader
-	 * interface.
-	 * 
-	 * @return the number of documents in the collection
-	 */
-	public int getNumberOfDocuments() {
-		return lines.size();
-	}
 
 }

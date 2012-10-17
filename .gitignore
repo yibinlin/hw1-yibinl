@@ -1,6 +1,8 @@
 *.class
 NERAnnotation.java
 NERAnnotation_Type.java
+POSAnnotation.java
+POSAnnotation_type.java
 *.in
 *.out
 /target/*
