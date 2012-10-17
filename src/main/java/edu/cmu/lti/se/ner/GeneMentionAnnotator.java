@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.jcas.JCas;
 
-import edu.cmu.lti.se.NERAnnotation;
+import edu.cmu.lti.se.ner.NERAnnotation;
 
 public class GeneMentionAnnotator extends JCasAnnotator_ImplBase {
 

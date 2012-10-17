@@ -16,7 +16,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceProcessException;
 import org.xml.sax.SAXException;
 
-import edu.cmu.lti.se.NERAnnotation;
+import edu.cmu.lti.se.ner.NERAnnotation;
 
 /**
  * A simple CAS consumer that generates XCAS (XML representation of the CAS)
