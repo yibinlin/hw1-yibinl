@@ -15,6 +15,12 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 
+/**
+ * Entity Recognizer inherited from original hw1 project.
+ * 
+ * @author Yibin Lin
+ *
+ */
 public class PosTagNamedEntityRecognizer {
 
   private StanfordCoreNLP pipeline;
@@ -29,6 +35,11 @@ public class PosTagNamedEntityRecognizer {
 	}
   }
 
+  /**
+   * get POS spans as gene spans.
+   * @param text input text 
+   * @return map of spans, order as <begin, and> to indicate the location of the span.
+   */
   public Map<Integer, Integer> getGeneSpans(String text) {
     Map<Integer, Integer> begin2end = new HashMap<Integer, Integer>();
     Annotation document = new Annotation(text);

@@ -15,8 +15,17 @@ import com.aliasi.util.AbstractExternalizable;
 
 import edu.cmu.lti.se.ner.util.StringUtils;
 
+/**
+ * This annotator uses LingPipe Hidden Markov Model method to tag gene mentions.
+ * 
+ * @author Yibin Lin
+ *
+ */
 public class GeneMentionAnnotator extends JCasAnnotator_ImplBase {
 
+	/**
+	 * instance of Chunker object from LingPipe.
+	 */
 	Chunker chunker;
 	
 	/**

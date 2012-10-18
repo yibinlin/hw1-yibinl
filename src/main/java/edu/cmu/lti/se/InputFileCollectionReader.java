@@ -47,6 +47,7 @@ import org.apache.uima.util.ProgressImpl;
  * <li><code>Language</code> (optional) - language of the input documents</li>
  * </ul>
  * 
+ * @author Yibin Lin
  */
 public class InputFileCollectionReader extends CollectionReader_ImplBase {
 	/**

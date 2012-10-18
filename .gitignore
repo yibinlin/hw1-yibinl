@@ -6,3 +6,4 @@ POSAnnotation_type.java
 *.in
 *.out
 /target/*
+/src/main/resources/javadoc/*

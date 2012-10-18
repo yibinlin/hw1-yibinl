@@ -2,7 +2,8 @@ package edu.cmu.lti.se.ner.util;
 
 /**
  * Common string utility methods shared across multiple analysis engines.
- * @author yibinl
+ * 
+ * @author Yibin Lin
  *
  */
 public class StringUtils {

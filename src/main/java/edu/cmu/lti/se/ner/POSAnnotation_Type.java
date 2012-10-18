@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** 
- * Updated by JCasGen Wed Oct 17 17:07:28 EDT 2012
+ * Updated by JCasGen Wed Oct 17 20:01:34 EDT 2012
  * @generated */
 public class POSAnnotation_Type extends Annotation_Type {
   /** @generated */
@@ -85,16 +85,16 @@ public class POSAnnotation_Type extends Annotation_Type {
   /** @generated */
   final int     casFeatCode_orthVote;
   /** @generated */ 
-  public int getOrthVote(int addr) {
+  public double getOrthVote(int addr) {
         if (featOkTst && casFeat_orthVote == null)
       jcas.throwFeatMissing("orthVote", "edu.cmu.lti.se.ner.POSAnnotation");
-    return ll_cas.ll_getIntValue(addr, casFeatCode_orthVote);
+    return ll_cas.ll_getDoubleValue(addr, casFeatCode_orthVote);
   }
   /** @generated */    
-  public void setOrthVote(int addr, int v) {
+  public void setOrthVote(int addr, double v) {
         if (featOkTst && casFeat_orthVote == null)
       jcas.throwFeatMissing("orthVote", "edu.cmu.lti.se.ner.POSAnnotation");
-    ll_cas.ll_setIntValue(addr, casFeatCode_orthVote, v);}
+    ll_cas.ll_setDoubleValue(addr, casFeatCode_orthVote, v);}
     
   
 
@@ -115,7 +115,7 @@ public class POSAnnotation_Type extends Annotation_Type {
     casFeatCode_outputId  = (null == casFeat_outputId) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_outputId).getCode();
 
  
-    casFeat_orthVote = jcas.getRequiredFeatureDE(casType, "orthVote", "uima.cas.Integer", featOkTst);
+    casFeat_orthVote = jcas.getRequiredFeatureDE(casType, "orthVote", "uima.cas.Double", featOkTst);
     casFeatCode_orthVote  = (null == casFeat_orthVote) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_orthVote).getCode();
 
   }
