@@ -29,12 +29,6 @@
           <string>hw1-yibinl.out</string>
         </value>
       </nameValuePair>
-      <nameValuePair>
-        <name>GoldStandard</name>
-        <value>
-          <string>hw1.out</string>
-        </value>
-      </nameValuePair>
     </configurationParameterSettings>
     <typeSystemDescription>
       <imports>
